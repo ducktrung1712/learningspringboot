@@ -3,6 +3,8 @@ package com.ducktrung.learningspingboot.Service;
 import com.ducktrung.learningspingboot.DTO.request.UserCreationRequest;
 import com.ducktrung.learningspingboot.DTO.request.UserUpdateRequest;
 import com.ducktrung.learningspingboot.Entity.User;
+import com.ducktrung.learningspingboot.Exception.AppException;
+import com.ducktrung.learningspingboot.Exception.ErrorCode;
 import com.ducktrung.learningspingboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class UserService {
         User user = new User();
 
         if(userRepository.existsByUsername(request.getUsername()))
-            throw new RuntimeException("UserName  existed");
+            throw new AppException(ErrorCode.USER_EXISTED);
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
         user.setFirstname(request.getFirstname());

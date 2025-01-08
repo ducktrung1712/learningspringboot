@@ -1,5 +1,6 @@
 package com.ducktrung.learningspingboot.Controller;
 
+import com.ducktrung.learningspingboot.DTO.request.ApiResponse;
 import com.ducktrung.learningspingboot.DTO.request.UserCreationRequest;
 import com.ducktrung.learningspingboot.DTO.request.UserUpdateRequest;
 import com.ducktrung.learningspingboot.Entity.User;
@@ -17,8 +18,10 @@ public class UserController {
     @Autowired
     private UserService userService;
     @PostMapping
-    User createUser(@RequestBody @Valid UserCreationRequest request){
-        return userService.createUser(request);
+    ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request){
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.createUser(request));
+        return apiResponse ;
     }
     @GetMapping
     List<User> getUsers(){
