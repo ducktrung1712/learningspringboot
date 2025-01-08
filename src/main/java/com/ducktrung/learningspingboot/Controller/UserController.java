@@ -4,6 +4,8 @@ import com.ducktrung.learningspingboot.DTO.request.UserCreationRequest;
 import com.ducktrung.learningspingboot.DTO.request.UserUpdateRequest;
 import com.ducktrung.learningspingboot.Entity.User;
 import com.ducktrung.learningspingboot.Service.UserService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +17,7 @@ public class UserController {
     @Autowired
     private UserService userService;
     @PostMapping
-    User createUser(@RequestBody UserCreationRequest request){
+    User createUser(@RequestBody @Valid UserCreationRequest request){
         return userService.createUser(request);
     }
     @GetMapping

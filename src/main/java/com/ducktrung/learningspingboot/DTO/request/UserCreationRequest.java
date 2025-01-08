@@ -1,9 +1,13 @@
 package com.ducktrung.learningspingboot.DTO.request;
 
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 public class UserCreationRequest {
+    @Size(min = 5, message = "Username must be at leats 3 characters")
     private String username;
+    @Size(min = 8, message = "Password must be at leats 8 characters")
     private String password;
     private String firstname;
     private String lastname;
