@@ -3,25 +3,28 @@ package com.ducktrung.learningspingboot.Controller;
 import com.ducktrung.learningspingboot.DTO.request.ApiResponse;
 import com.ducktrung.learningspingboot.DTO.request.UserCreationRequest;
 import com.ducktrung.learningspingboot.DTO.request.UserUpdateRequest;
+import com.ducktrung.learningspingboot.DTO.response.UserResponse;
 import com.ducktrung.learningspingboot.Entity.User;
 import com.ducktrung.learningspingboot.Service.UserService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
-    @Autowired
-    private UserService userService;
+    UserService userService;
     @PostMapping
-    ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request){
+    ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
         ApiResponse<User> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.createUser(request));
-        return apiResponse ;
+        apiResponse.setResult(userService.createUser(request)); // Gọi setResult đúng cách
+        return apiResponse;
     }
     @GetMapping
     List<User> getUsers(){
@@ -29,11 +32,11 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    User getUser(@PathVariable("userId")String userId){
+    UserResponse getUser(@PathVariable("userId")String userId){
         return userService.getUser(userId);
     }
     @PutMapping("/{userId}")
-    User updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request){
+    UserResponse updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request){
         return userService.updateUser(userId, request);
     }
     @DeleteMapping("/{userId}")
