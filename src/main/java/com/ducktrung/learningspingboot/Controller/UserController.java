@@ -4,7 +4,6 @@ import com.ducktrung.learningspingboot.DTO.request.ApiResponse;
 import com.ducktrung.learningspingboot.DTO.request.UserCreationRequest;
 import com.ducktrung.learningspingboot.DTO.request.UserUpdateRequest;
 import com.ducktrung.learningspingboot.DTO.response.UserResponse;
-import com.ducktrung.learningspingboot.Entity.User;
 import com.ducktrung.learningspingboot.Service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
