@@ -51,17 +51,21 @@ public class AuthenticationService {
 
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
-        var verifired = signedJWT.verify(verifier);
+        var verified = signedJWT.verify(verifier);
 
         return IntrospectResponse.builder()
-                .valid(verifired && expiryTime.after(new Date()))
+                .valid(verified && expiryTime.after(new Date()))
                 .build();
     }
+
     public AuthenticationResponse authenticate(AuthenticationRequest request){
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+        boolean authenticated = passwordEncoder.matches(request.getPassword(),
+                user.getPassword());
+
         if (!authenticated)
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
@@ -73,8 +77,9 @@ public class AuthenticationService {
                 .build();
     }
 
-    private String generateToken(User user){
+    private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer("DuckTrung.com")
@@ -82,7 +87,7 @@ public class AuthenticationService {
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
-                .claim("scope",buildScope(user))
+                .claim("scope", buildScope(user))
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -93,14 +98,22 @@ public class AuthenticationService {
             jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
             return jwsObject.serialize();
         } catch (JOSEException e) {
-            log.error("Can not token", e);
+            log.error("Cannot create token", e);
             throw new RuntimeException(e);
         }
     }
+
     private String buildScope(User user){
-        StringJoiner stringJoiner = new StringJoiner("");
-//        if (!CollectionUtils.isEmpty(user.getRoles()))
-//            user.getRoles().forEach(stringJoiner ::add);
+        StringJoiner stringJoiner = new StringJoiner(" ");
+
+        if (!CollectionUtils.isEmpty(user.getRoles()))
+            user.getRoles().forEach(role -> {
+                stringJoiner.add("ROLE_" + role.getName());
+                if (!CollectionUtils.isEmpty(role.getPermissions()))
+                    role.getPermissions()
+                            .forEach(permission -> stringJoiner.add(permission.getName()));
+            });
+
         return stringJoiner.toString();
     }
 }
