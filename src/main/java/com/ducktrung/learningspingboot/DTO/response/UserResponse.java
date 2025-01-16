@@ -1,5 +1,7 @@
 package com.ducktrung.learningspingboot.DTO.response;
 
+import com.ducktrung.learningspingboot.Entity.Role;
+import jakarta.persistence.ManyToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,5 +19,6 @@ public class UserResponse {
      String firstname;
      String lastname;
      LocalDate dob;
+     @ManyToMany
      Set<String> roles;
 }

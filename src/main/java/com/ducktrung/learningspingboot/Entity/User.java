@@ -1,13 +1,11 @@
 package com.ducktrung.learningspingboot.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -26,6 +24,6 @@ public class User {
      String firstname;
      String lastname;
      LocalDate dob;
-     Set<String> roles;
+     List<String> roles;
 
 }
