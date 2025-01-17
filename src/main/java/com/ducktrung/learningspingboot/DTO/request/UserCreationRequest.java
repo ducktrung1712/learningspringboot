@@ -1,5 +1,6 @@
 package com.ducktrung.learningspingboot.DTO.request;
 
+import com.ducktrung.learningspingboot.Validator.DobConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +18,8 @@ public class UserCreationRequest {
     String password;
     String firstname;
     String lastname;
+
+    @DobConstraint(min = 18, message = "INVALID_DOB")
     LocalDate dob;
 
 }
