@@ -3,6 +3,7 @@ package com.ducktrung.learningspingboot.Controller;
 import com.ducktrung.learningspingboot.DTO.request.ApiResponse;
 import com.ducktrung.learningspingboot.DTO.request.AuthenticationRequest;
 import com.ducktrung.learningspingboot.DTO.request.IntrospectRequest;
+import com.ducktrung.learningspingboot.DTO.request.LogoutRequest;
 import com.ducktrung.learningspingboot.DTO.response.AuthenticationResponse;
 import com.ducktrung.learningspingboot.DTO.response.IntrospectResponse;
 import com.ducktrung.learningspingboot.Service.AuthenticationService;
@@ -36,5 +37,12 @@ public class AuthenticationController {
         return ApiResponse.<IntrospectResponse>builder()
                 .result(result)
                 .build();
+    }
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request)
+            throws ParseException, JOSEException {
+            authenticationService.logout(request);
+            return ApiResponse.<Void>builder()
+                    .build();
     }
 }
