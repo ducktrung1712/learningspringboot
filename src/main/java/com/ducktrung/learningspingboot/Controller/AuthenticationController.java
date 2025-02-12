@@ -1,9 +1,6 @@
 package com.ducktrung.learningspingboot.Controller;
 
-import com.ducktrung.learningspingboot.DTO.request.ApiResponse;
-import com.ducktrung.learningspingboot.DTO.request.AuthenticationRequest;
-import com.ducktrung.learningspingboot.DTO.request.IntrospectRequest;
-import com.ducktrung.learningspingboot.DTO.request.LogoutRequest;
+import com.ducktrung.learningspingboot.DTO.request.*;
 import com.ducktrung.learningspingboot.DTO.response.AuthenticationResponse;
 import com.ducktrung.learningspingboot.DTO.response.IntrospectResponse;
 import com.ducktrung.learningspingboot.Service.AuthenticationService;
@@ -35,6 +32,14 @@ public class AuthenticationController {
     ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder()
+                .result(result)
+                .build();
+    }
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder()
                 .result(result)
                 .build();
     }

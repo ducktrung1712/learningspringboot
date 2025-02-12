@@ -3,6 +3,7 @@ package com.ducktrung.learningspingboot.Service;
 import com.ducktrung.learningspingboot.DTO.request.AuthenticationRequest;
 import com.ducktrung.learningspingboot.DTO.request.IntrospectRequest;
 import com.ducktrung.learningspingboot.DTO.request.LogoutRequest;
+import com.ducktrung.learningspingboot.DTO.request.RefreshRequest;
 import com.ducktrung.learningspingboot.DTO.response.AuthenticationResponse;
 import com.ducktrung.learningspingboot.DTO.response.IntrospectResponse;
 import com.ducktrung.learningspingboot.Entity.InvalidatedToken;
@@ -79,6 +80,32 @@ public class AuthenticationService {
                 .token(token)
                 .authenticated(true)
                 .build();
+    }
+
+    public AuthenticationResponse refreshToken(RefreshRequest request)
+            throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getToken());
+        var jit = signedJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signedJWT.getJWTClaimsSet().getSubject();
+        var user = userRepository.findByUsername(username).orElseThrow(
+                () -> new AppException(ErrorCode.UNAUTHENTICATED)
+        );
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
+
+
     }
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
